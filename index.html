@@ -55,7 +55,8 @@
   fetch(ENDPOINT + "?" + new URLSearchParams(link).toString())
     .then(function (r) { return r.json().then(function (b) { return { ok: r.ok, b: b }; }); })
     .then(function (x) {
-      if (!x.ok) { dead("Open it from the lead alert email."); return; }
+      if (x.b.error === "bad_link" || x.b.error === "not_found") { dead("Open it from the lead alert email."); return; }
+      if (!x.ok) return; // an upstream hiccup: the buttons may still work, only the name is missing
       name = x.b.name;
       title.textContent = "Did " + name + " book?";
     })
